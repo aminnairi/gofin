@@ -1,12 +1,7 @@
-package finance
+package main
 
-func GetFinalCapital(year uint8, interestInPercentage float32, monthlyInvestedCapital float32) (capital float32) {
-	for range year {
-		var yearlyInvestedAmount float32 = monthlyInvestedCapital * 12
-		var interestMultiplier float32 = 1 + (interestInPercentage / 100)
+import "fmt"
 
-		capital = (capital + yearlyInvestedAmount) * interestMultiplier
-	}
-
-	return capital
+func main() {
+	fmt.Println("Coming soon, being able to create your budget from your terminal!")
 }
