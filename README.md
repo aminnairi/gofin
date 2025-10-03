@@ -23,9 +23,11 @@ func GetFinalCapital(
 ```go
 package main
 
-import "github.com/aminnairi/gofin"
+import (
+  finance "github.com/aminnairi/gofin"
+)
 
 func main() {
-  capital := gofin.GetFinalCapital(5, 7, 100)
+  capital := finance.GetFinalCapital(5, 7, 100)
 }
 ```
