@@ -2,32 +2,38 @@
 
 Finance functions for the Go language
 
-## Installation
+## Usage
+
+### Installation
 
 ```bash
 go get github.com/aminnairi/gofin
 ```
 
-## Usage
+### Budet
 
-### GetFinalCapital
+See [`budget`](./budget)
 
-```go
-func GetFinalCapital(
-  year uint8,
-  interestInPercentage float32,
-  monthlyInvestedCapital float32
-) float32
+### Finance
+
+See [`finance`](./finance)
+
+## Development
+
+### Requirements
+
+- git
+- go
+
+### Clone
+
+```bash
+git clone https://github.com/aminnairi/gofin
+cd gofin
 ```
 
-```go
-package main
+### Test
 
-import (
-  finance "github.com/aminnairi/gofin"
-)
-
-func main() {
-  capital := finance.GetFinalCapital(5, 7, 100)
-}
+```bash
+go test ./...
 ```
