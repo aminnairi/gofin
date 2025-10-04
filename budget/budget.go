@@ -1,6 +1,7 @@
 package budget
 
 import (
+	"fmt"
 	"math"
 	"time"
 )
@@ -30,24 +31,35 @@ func (budget Budget) Forecast(date time.Time) (amount float32) {
 		return 0
 	}
 
-	start := budget.start
+	currentDate := budget.start
 
-	for start.Before(date) {
-		startMonth := int8(start.Month())
+	for currentDate.Before(date) {
+		startMonth := int8(currentDate.Month())
 
 		for _, expense := range budget.expenses {
 			if expense.start.Before(budget.start) {
 				continue
 			}
 
-			if expense.end.After(date) {
+			if expense.end.Before(currentDate) {
+				continue
+			}
+
+			if expense.monthOccurrence < 0 {
 				continue
 			}
 
 			expenseMonth := int8(expense.start.Month())
 			monthDelta := int8(math.Abs(float64(startMonth - expenseMonth)))
 
-			if monthDelta%expense.monthOccurrence != 0 {
+			if expense.monthOccurrence != 0 && monthDelta%expense.monthOccurrence != 0 {
+				fmt.Println("Dépense qui ne correspond pas a la date courant")
+				continue
+			}
+
+			fmt.Println("Dépense correspondante")
+
+			if expense.monthOccurrence == 0 && !expense.start.Equal(currentDate) {
 				continue
 			}
 
@@ -59,21 +71,29 @@ func (budget Budget) Forecast(date time.Time) (amount float32) {
 				continue
 			}
 
-			if income.end.After(date) {
+			if income.end.Before(currentDate) {
+				continue
+			}
+
+			if income.monthOccurrence < 0 {
 				continue
 			}
 
 			incomeMonth := int8(income.start.Month())
 			monthDelta := int8(math.Abs(float64(startMonth - incomeMonth)))
 
-			if monthDelta%income.monthOccurrence != 0 {
+			if income.monthOccurrence != 0 && monthDelta%income.monthOccurrence != 0 {
+				continue
+			}
+
+			if income.monthOccurrence == 0 && !income.start.Equal(currentDate) {
 				continue
 			}
 
 			amount += income.amount
 		}
 
-		start = start.AddDate(0, 1, 0)
+		currentDate = currentDate.AddDate(0, 1, 0)
 	}
 
 	return amount
