@@ -23,7 +23,7 @@ type Budget struct {
 	incomes  []Income
 }
 
-func (budget Budget) GetForecast(date time.Time) (amount float32) {
+func (budget Budget) Forecast(date time.Time) (amount float32) {
 	if budget.start.After(date) {
 		return 0
 	}
