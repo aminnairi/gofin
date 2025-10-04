@@ -8,12 +8,14 @@ import (
 type Expense struct {
 	amount          float32
 	start           time.Time
+	end             time.Time
 	monthOccurrence int8
 }
 
 type Income struct {
 	amount          float32
 	start           time.Time
+	end             time.Time
 	monthOccurrence int8
 }
 
@@ -38,6 +40,10 @@ func (budget Budget) Forecast(date time.Time) (amount float32) {
 				continue
 			}
 
+			if expense.end.After(date) {
+				continue
+			}
+
 			expenseMonth := int8(expense.start.Month())
 			monthDelta := int8(math.Abs(float64(startMonth - expenseMonth)))
 
@@ -50,6 +56,10 @@ func (budget Budget) Forecast(date time.Time) (amount float32) {
 
 		for _, income := range budget.incomes {
 			if income.start.Before(budget.start) {
+				continue
+			}
+
+			if income.end.After(date) {
 				continue
 			}
 
