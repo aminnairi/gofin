@@ -5,7 +5,7 @@ import (
 	"time"
 )
 
-func TestBudget(t *testing.T) {
+func TestBudgetForecast(t *testing.T) {
 	budget := Budget{
 		start: time.Date(2025, time.April, 1, 0, 0, 0, 0, time.Local),
 		incomes: []Income{
@@ -24,7 +24,7 @@ func TestBudget(t *testing.T) {
 		},
 	}
 
-	amount := budget.GetForecast(time.Date(2050, time.April, 1, 0, 0, 0, 0, time.Local))
+	amount := budget.Forecast(time.Date(2050, time.April, 1, 0, 0, 0, 0, time.Local))
 
 	var expectedAmount float32 = 300_000
 
