@@ -7,90 +7,82 @@ import (
 )
 
 type Expense struct {
-	amount          float32
-	start           time.Time
-	end             time.Time
-	monthOccurrence int8
+	Amount          float32
+	Start           time.Time
+	End             time.Time
+	MonthOccurrence int8
 }
 
 type Income struct {
-	amount          float32
-	start           time.Time
-	end             time.Time
-	monthOccurrence int8
+	Amount          float32
+	Start           time.Time
+	End             time.Time
+	MonthOccurrence int8
 }
 
 type Budget struct {
-	start    time.Time
-	expenses []Expense
-	incomes  []Income
+	Start    time.Time
+	Expenses []Expense
+	Incomes  []Income
 }
 
 func (budget Budget) Forecast(date time.Time) (amount float32) {
-	if budget.start.After(date) {
+	if budget.Start.After(date) {
 		return 0
 	}
 
-	currentDate := budget.start
+	currentDate := budget.Start
 
 	for currentDate.Before(date) {
 		startMonth := int8(currentDate.Month())
 
-		for _, expense := range budget.expenses {
-			if expense.start.Before(budget.start) {
+		for _, expense := range budget.Expenses {
+			if expense.End.Before(currentDate) {
 				continue
 			}
 
-			if expense.end.Before(currentDate) {
+			if expense.MonthOccurrence < 0 {
 				continue
 			}
 
-			if expense.monthOccurrence < 0 {
-				continue
-			}
-
-			expenseMonth := int8(expense.start.Month())
+			expenseMonth := int8(expense.Start.Month())
 			monthDelta := int8(math.Abs(float64(startMonth - expenseMonth)))
 
-			if expense.monthOccurrence != 0 && monthDelta%expense.monthOccurrence != 0 {
+			if expense.MonthOccurrence != 0 && monthDelta%expense.MonthOccurrence != 0 {
 				fmt.Println("Dépense qui ne correspond pas a la date courant")
 				continue
 			}
 
 			fmt.Println("Dépense correspondante")
 
-			if expense.monthOccurrence == 0 && !expense.start.Equal(currentDate) {
+			if expense.MonthOccurrence == 0 && !expense.Start.Equal(currentDate) {
 				continue
 			}
 
-			amount -= expense.amount
+			amount -= expense.Amount
 		}
 
-		for _, income := range budget.incomes {
-			if income.start.Before(budget.start) {
+		for _, income := range budget.Incomes {
+			if income.End.Before(currentDate) {
 				continue
 			}
 
-			if income.end.Before(currentDate) {
+			if income.MonthOccurrence < 0 {
 				continue
 			}
 
-			if income.monthOccurrence < 0 {
-				continue
-			}
-
-			incomeMonth := int8(income.start.Month())
+			incomeMonth := int8(income.Start.Month())
 			monthDelta := int8(math.Abs(float64(startMonth - incomeMonth)))
 
-			if income.monthOccurrence != 0 && monthDelta%income.monthOccurrence != 0 {
+			if income.MonthOccurrence != 0 && monthDelta%income.MonthOccurrence != 0 {
 				continue
 			}
 
-			if income.monthOccurrence == 0 && !income.start.Equal(currentDate) {
+			if income.MonthOccurrence == 0 && !income.Start.Equal(currentDate) {
 				continue
 			}
 
-			amount += income.amount
+			amount += income.Amount
 		}
 
 		currentDate = currentDate.AddDate(0, 1, 0)
