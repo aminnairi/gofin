@@ -34,21 +34,33 @@ func (budget Budget) Forecast(date time.Time) (amount float32) {
 		startMonth := int8(start.Month())
 
 		for _, expense := range budget.expenses {
+			if expense.start.Before(budget.start) {
+				continue
+			}
+
 			expenseMonth := int8(expense.start.Month())
 			monthDelta := int8(math.Abs(float64(startMonth - expenseMonth)))
 
-			if monthDelta%expense.monthOccurrence == 0 {
-				amount -= expense.amount
+			if monthDelta%expense.monthOccurrence != 0 {
+				continue
 			}
+
+			amount -= expense.amount
 		}
 
 		for _, income := range budget.incomes {
+			if income.start.Before(budget.start) {
+				continue
+			}
+
 			incomeMonth := int8(income.start.Month())
 			monthDelta := int8(math.Abs(float64(startMonth - incomeMonth)))
 
-			if monthDelta%income.monthOccurrence == 0 {
-				amount += income.amount
+			if monthDelta%income.monthOccurrence != 0 {
+				continue
 			}
+
+			amount += income.amount
 		}
 
 		start = start.AddDate(0, 1, 0)
