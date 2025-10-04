@@ -7,33 +7,33 @@ import (
 
 func TestBudgetForecast(t *testing.T) {
 	budget := Budget{
-		start: time.Date(2025, time.January, 1, 0, 0, 0, 0, time.Local),
-		incomes: []Income{
+		Start: time.Date(2025, time.January, 1, 0, 0, 0, 0, time.Local),
+		Incomes: []Income{
 			{
-				amount:          2000,
-				start:           time.Date(2025, time.January, 1, 0, 0, 0, 0, time.Local),
-				end:             time.Date(2050, time.December, 1, 0, 0, 0, 0, time.Local),
-				monthOccurrence: 1,
+				Amount:          2000,
+				Start:           time.Date(2025, time.January, 1, 0, 0, 0, 0, time.Local),
+				End:             time.Date(2050, time.December, 1, 0, 0, 0, 0, time.Local),
+				MonthOccurrence: 1,
 			},
 		},
-		expenses: []Expense{
+		Expenses: []Expense{
 			{
-				amount:          1000,
-				start:           time.Date(2025, time.January, 1, 0, 0, 0, 0, time.Local),
-				end:             time.Date(2050, time.December, 1, 0, 0, 0, 0, time.Local),
-				monthOccurrence: 1,
+				Amount:          1000,
+				Start:           time.Date(2025, time.January, 1, 0, 0, 0, 0, time.Local),
+				End:             time.Date(2050, time.December, 1, 0, 0, 0, 0, time.Local),
+				MonthOccurrence: 1,
 			},
 			{
-				amount:          1000,
-				start:           time.Date(2025, time.January, 1, 0, 0, 0, 0, time.Local),
-				end:             time.Date(2050, time.December, 1, 0, 0, 0, 0, time.Local),
-				monthOccurrence: 2,
+				Amount:          1000,
+				Start:           time.Date(2025, time.January, 1, 0, 0, 0, 0, time.Local),
+				End:             time.Date(2050, time.December, 1, 0, 0, 0, 0, time.Local),
+				MonthOccurrence: 2,
 			},
 			{
-				amount:          1000,
-				start:           time.Date(2025, time.January, 1, 0, 0, 0, 0, time.Local),
-				end:             time.Date(2025, time.January, 1, 0, 0, 0, 0, time.Local),
-				monthOccurrence: 1,
+				Amount:          1000,
+				Start:           time.Date(2025, time.January, 1, 0, 0, 0, 0, time.Local),
+				End:             time.Date(2025, time.January, 1, 0, 0, 0, 0, time.Local),
+				MonthOccurrence: 1,
 			},
 		},
 	}
