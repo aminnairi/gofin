@@ -1,7 +1,6 @@
 package budget
 
 import (
-	"fmt"
 	"math"
 	"time"
 )
@@ -49,11 +48,8 @@ func (budget Budget) Forecast(date time.Time) (amount float32) {
 			monthDelta := int8(math.Abs(float64(startMonth - expenseMonth)))
 
 			if expense.MonthOccurrence != 0 && monthDelta%expense.MonthOccurrence != 0 {
-				fmt.Println("Dépense qui ne correspond pas a la date courant")
 				continue
 			}
-
-			fmt.Println("Dépense correspondante")
 
 			if expense.MonthOccurrence == 0 && !expense.Start.Equal(currentDate) {
 				continue
