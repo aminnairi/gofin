@@ -5,11 +5,19 @@ import (
 	"time"
 )
 
+type Exception struct {
+	Amount          float32
+	Start           time.Time
+	End             time.Time
+	MonthOccurrence int8
+}
+
 type Expense struct {
 	Amount          float32
 	Start           time.Time
 	End             time.Time
 	MonthOccurrence int8
+	Exceptions      []Exception
 }
 
 type Income struct {
@@ -17,6 +25,7 @@ type Income struct {
 	Start           time.Time
 	End             time.Time
 	MonthOccurrence int8
+	Exceptions      []Exception
 }
 
 type Budget struct {
@@ -25,7 +34,7 @@ type Budget struct {
 	Incomes  []Income
 }
 
-func (budget Budget) Forecast(date time.Time) (amount float32) {
+func (budget Budget) Forecast(date time.Time) (forecast float32) {
 	if budget.Start.After(date) {
 		return 0
 	}
@@ -36,6 +45,30 @@ func (budget Budget) Forecast(date time.Time) (amount float32) {
 		startMonth := int8(currentDate.Month())
 
 		for _, expense := range budget.Expenses {
+			exceptionFound := false
+
+			for _, exception := range expense.Exceptions {
+				if exception.MonthOccurrence == 0 {
+					if exception.Start.Equal(currentDate) || exception.End.Equal(currentDate) {
+						forecast -= exception.Amount
+						exceptionFound = true
+						break
+					}
+
+					continue
+				}
+
+				if (exception.Start.Equal(currentDate) || exception.Start.After(currentDate)) && (exception.End.Equal(currentDate) || exception.End.Before(currentDate)) {
+					forecast -= exception.Amount
+					exceptionFound = true
+					break
+				}
+			}
+
+			if exceptionFound {
+				continue
+			}
+
 			if expense.End.Before(currentDate) {
 				continue
 			}
@@ -55,10 +88,34 @@ func (budget Budget) Forecast(date time.Time) (amount float32) {
 				continue
 			}
 
-			amount -= expense.Amount
+			forecast -= expense.Amount
 		}
 
 		for _, income := range budget.Incomes {
+			exceptionFound := false
+
+			for _, exception := range income.Exceptions {
+				if exception.MonthOccurrence == 0 {
+					if exception.Start.Equal(currentDate) || exception.End.Equal(currentDate) {
+						forecast -= exception.Amount
+						exceptionFound = true
+						break
+					}
+
+					continue
+				}
+
+				if (exception.Start.Equal(currentDate) || exception.Start.After(currentDate)) && (exception.End.Equal(currentDate) || exception.End.Before(currentDate)) {
+					forecast -= exception.Amount
+					exceptionFound = true
+					break
+				}
+			}
+
+			if exceptionFound {
+				continue
+			}
+
 			if income.End.Before(currentDate) {
 				continue
 			}
@@ -78,11 +135,11 @@ func (budget Budget) Forecast(date time.Time) (amount float32) {
 				continue
 			}
 
-			amount += income.Amount
+			forecast += income.Amount
 		}
 
 		currentDate = currentDate.AddDate(0, 1, 0)
 	}
 
-	return amount
+	return forecast
 }

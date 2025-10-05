@@ -22,6 +22,14 @@ func TestBudgetForecast(t *testing.T) {
 				Start:           time.Date(2025, time.January, 1, 0, 0, 0, 0, time.Local),
 				End:             time.Date(2050, time.December, 1, 0, 0, 0, 0, time.Local),
 				MonthOccurrence: 1,
+				Exceptions: []Exception{
+					{
+						Amount:          500,
+						Start:           time.Date(2026, time.January, 1, 0, 0, 0, 0, time.Local),
+						End:             time.Date(2026, time.January, 1, 0, 0, 0, 0, time.Local),
+						MonthOccurrence: 0,
+					},
+				},
 			},
 			{
 				Amount:          1000,
@@ -40,7 +48,7 @@ func TestBudgetForecast(t *testing.T) {
 
 	amount := budget.Forecast(time.Date(2050, time.January, 1, 0, 0, 0, 0, time.Local))
 
-	var expectedAmount float32 = 149_000
+	var expectedAmount float32 = 149_500
 
 	if amount != expectedAmount {
 		t.Errorf("Expected %f to be equal to %f", amount, expectedAmount)
